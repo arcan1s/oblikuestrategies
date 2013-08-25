@@ -1,4 +1,0 @@
-oblikuestrategies
-=================
-
-Oblique Strategies plasmoid
