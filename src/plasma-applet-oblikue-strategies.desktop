@@ -96,6 +96,7 @@ Comment[x-test]=xxPlasma oblikue-strategiesxx
 Comment[zh_CN]=Plasma oblikue-strategies
 Comment[zh_TW]=Plasma oblikue-strategies
 Type=Service
+Icon=oblikue-strategies
 
 X-KDE-ServiceTypes=Plasma/Applet
 X-KDE-Library=plasma_applet_oblikue-strategies

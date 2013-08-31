@@ -25,29 +25,40 @@
 // We need the Plasma Applet headers
 #include <Plasma/Applet>
 #include <Plasma/Svg>
+#include <Plasma/Label>
+#include <Plasma/PushButton>
+#include <ui_configwindow.h>
 
 class QSizeF;
 
 // Define our plasma Applet
 class oblikuestrategies : public Plasma::Applet
 {
-    Q_OBJECT
-    public:
-        // Basic Create/Destroy
-        oblikuestrategies(QObject *parent, const QVariantList &args);
-        ~oblikuestrategies();
+  Q_OBJECT
+public:
+  // Basic Create/Destroy
+  oblikuestrategies(QObject *parent, const QVariantList &args);
+  ~oblikuestrategies();
+  void init();
 
-        // The paintInterface procedure paints the applet to the desktop
-        void paintInterface(QPainter *painter,
-                const QStyleOptionGraphicsItem *option,
-                const QRect& contentsRect);
-        void init();
+protected:
+  void createConfigurationInterface(KConfigDialog *parent);
 
-    private:
-        Plasma::Svg m_svg;
-        KIcon m_icon;
+public slots:
+  void updateEvent();
+  void configAccepted();
+  void configChanged();
+
+private:
+  Plasma::Label *m_label;
+  Plasma::PushButton *m_button;
+  int edition, fontSize, fontWeight;
+  QString fontFamily, fontColor, fontStyle;
+  QStringList formatLine;
+  QStringList mess_first, mess_second, mess_third, mess_fouth;
+  Ui::ConfigWindow uiConfig;
 };
- 
+
 // This is the command that links your applet to the .desktop file
 K_EXPORT_PLASMA_APPLET(oblikue-strategies, oblikuestrategies)
 #endif
