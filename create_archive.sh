@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd src
+cd sources
 
 FILES="CMakeLists.txt configwindow.ui oblikue-strategies.cpp oblikue-strategies.h oblikue-strategies.png plasma-applet-oblikue-strategies.desktop README"
 ARCHIVE="oblikue-strategies"
