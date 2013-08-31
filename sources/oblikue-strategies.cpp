@@ -513,21 +513,6 @@ void oblikuestrategies::init()
   mess_fouth.append("Would anyone want it?");
   mess_fouth.append("Your mistake was a hidden intention");
 
-  KConfigGroup cg = config();
-  edition = cg.readEntry("edition", 1);
-  fontFamily = cg.readEntry("font_family", "Terminus");
-  fontSize = cg.readEntry("font_size", 12);
-  fontColor = cg.readEntry("font_color", "#000000");
-  fontStyle = cg.readEntry("font_style", "normal");
-  fontWeight = cg.readEntry("font_weight", 400);
-  formatLine.append("<p align=\"justify\"><span style=\" font-family:'" + fontFamily + \
-                    "'; font-style:" + fontStyle + \
-                    "; font-size:" + QString::number(fontSize) + \
-                    "pt; font-weight:" + QString::number(fontWeight) + \
-                    "; color:" + fontColor + \
-                    ";\">");
-  formatLine.append("</span></p>");
-
   QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(this);
   layout->setOrientation(Qt::Vertical);
 
@@ -541,7 +526,10 @@ void oblikuestrategies::init()
   layout->addItem(m_button);
 
   connect(m_button, SIGNAL(clicked()), this, SLOT(updateEvent()));
-  updateEvent();
+
+  formatLine.append("");
+  formatLine.append("");
+  configChanged();
 }
 
 void oblikuestrategies::updateEvent()
@@ -586,6 +574,7 @@ void oblikuestrategies::createConfigurationInterface(KConfigDialog *parent)
 
   parent->addPage(configwin, i18n("Appearance"), Applet::icon());
   connect(parent, SIGNAL(okClicked()), this, SLOT(configAccepted()));
+  connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
 }
 
 void oblikuestrategies::configAccepted()
