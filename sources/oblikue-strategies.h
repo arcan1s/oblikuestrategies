@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) %{CURRENT_YEAR} by %{AUTHOR} <%{EMAIL}>                            *
+ *   Copyright (C) 2013 by Evgeniy Alekseev <esalekseev@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,12 +17,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-// Here we avoid loading the header multiple times
 #ifndef OBLIKUESTRATEGIES_HEADER
 #define OBLIKUESTRATEGIES_HEADER
 
 #include <KIcon>
-// We need the Plasma Applet headers
 #include <Plasma/Applet>
 #include <Plasma/Svg>
 #include <Plasma/Label>
@@ -31,34 +29,35 @@
 
 class QSizeF;
 
-// Define our plasma Applet
 class oblikuestrategies : public Plasma::Applet
 {
   Q_OBJECT
 public:
-  // Basic Create/Destroy
   oblikuestrategies(QObject *parent, const QVariantList &args);
   ~oblikuestrategies();
   void init();
 
-protected:
-  void createConfigurationInterface(KConfigDialog *parent);
-
 public slots:
   void updateEvent();
+//  for configuration interface
   void configAccepted();
   void configChanged();
 
+protected:
+  void createConfigurationInterface(KConfigDialog *parent);
+
 private:
+  //  ui
   Plasma::Label *m_label;
   Plasma::PushButton *m_button;
+  //  variables
   int edition, fontSize, fontWeight;
   QString fontFamily, fontColor, fontStyle;
   QStringList formatLine;
-  QStringList mess_first, mess_second, mess_third, mess_fouth;
+  QList<QStringList> mess;
+  //  configuration interface
   Ui::ConfigWindow uiConfig;
 };
 
-// This is the command that links your applet to the .desktop file
 K_EXPORT_PLASMA_APPLET(oblikue-strategies, oblikuestrategies)
-#endif
+#endif /* OBLIKUESTRATEGIES_HEADER */

@@ -24,3 +24,4 @@ rm -rf ${ARCHIVE}
 cd ..
 MD5SUMS=`md5sum ${ARCHIVE}-${VERSION}.tar.xz| awk '{print $1}'`
 sed -i "/md5sums=('[0-9A-Fa-f]*/s/[^'][^)]*/md5sums=('${MD5SUMS}'/" PKGBUILD
+sed -i "s/pkgver=[0-9.]*/pkgver=${VERSION}/" PKGBUILD
