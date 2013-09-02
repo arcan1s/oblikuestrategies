@@ -38,6 +38,7 @@ public:
   void init();
 
 public slots:
+  void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
   void updateEvent();
 //  for configuration interface
   void configAccepted();
@@ -49,11 +50,11 @@ protected:
 private:
   //  ui
   Plasma::Label *m_label;
-  Plasma::PushButton *m_button;
+  Plasma::Label *info_label;
   //  variables
   int edition, fontSize, fontWeight;
   QString fontFamily, fontColor, fontStyle;
-  QStringList formatLine;
+  QStringList formatLine, copyright;
   QList<QStringList> mess;
   //  configuration interface
   Ui::ConfigWindow uiConfig;

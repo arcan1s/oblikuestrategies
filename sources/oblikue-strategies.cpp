@@ -40,7 +40,7 @@ oblikuestrategies::oblikuestrategies(QObject *parent, const QVariantList &args)
 oblikuestrategies::~oblikuestrategies()
 {
   delete m_label;
-  delete m_button;
+  delete info_label;
 }
 
 void oblikuestrategies::init()
@@ -160,6 +160,7 @@ void oblikuestrategies::init()
   temp_mess.append("You are an engineer");
   temp_mess.append("You can only make one dot at a time");
   temp_mess.append("You don't have to be ashamed of using your own ideas");
+  temp_mess.append("");
   mess.append(temp_mess);
   temp_mess.clear();
 
@@ -292,6 +293,7 @@ void oblikuestrategies::init()
   temp_mess.append("You are an engineer");
   temp_mess.append("You can only make one dot at a time");
   temp_mess.append("You don't have to be ashamed of using your own ideas");
+  temp_mess.append("");
   mess.append(temp_mess);
   temp_mess.clear();
 
@@ -418,6 +420,7 @@ void oblikuestrategies::init()
   temp_mess.append("You are an engineer");
   temp_mess.append("You can only make one dot at a time");
   temp_mess.append("You don't have to be ashamed of using your own ideas");
+  temp_mess.append("");
   mess.append(temp_mess);
   temp_mess.clear();
 
@@ -525,6 +528,20 @@ void oblikuestrategies::init()
   mess.append(temp_mess);
   temp_mess.clear();
 
+//  copyright
+  copyright.append(QString("<p align=\"right\"><span style=\" font-size:6pt;\">") + \
+                   QString("1st edition (c) 1975 Brian Eno/Peter Schmidt") + \
+                   QString("</span></p>"));
+  copyright.append(QString("<p align=\"right\"><span style=\" font-size:6pt;\">") + \
+                   QString("2nd edition (c) 1978 Brian Eno/Peter Schmidt") + \
+                   QString("</span></p>"));
+  copyright.append(QString("<p align=\"right\"><span style=\" font-size:6pt;\">") + \
+                   QString("3rd edition (c) 1979 Brian Eno/Peter Schmidt") + \
+                   QString("</span></p>"));
+  copyright.append(QString("<p align=\"right\"><span style=\" font-size:6pt;\">") + \
+                   QString("4th edition (c) 1996 Brian Eno/Peter Schmidt") + \
+                   QString("</span></p>"));
+
 //  generate ui
 //  layout
   QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(this);
@@ -537,25 +554,20 @@ void oblikuestrategies::init()
   layout->addItem(m_label);
   layout->addStretch(1);
 
-//  button
-  QGraphicsLinearLayout *but_layout = new QGraphicsLinearLayout(layout);
-  but_layout->setOrientation(Qt::Horizontal);
-  but_layout->addStretch(1);
-  m_button = new Plasma::PushButton(this);
-  m_button->setMinimumSize(40.0, 20.0);
-  m_button->setMaximumSize(80.0, 30.0);
-  m_button->setText("Update");
-  but_layout->addItem(m_button);
-  but_layout->addStretch(1);
-  layout->addItem(but_layout);
-
-//  update signal
-  connect(m_button, SIGNAL(clicked()), this, SLOT(updateEvent()));
+//  copyright label
+  info_label = new Plasma::Label(this);
+  layout->addItem(info_label);
 
 //  read variables
   formatLine.append("");
   formatLine.append("");
   configChanged();
+}
+
+void oblikuestrategies::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+// mouse double click event
+  updateEvent();
 }
 
 void oblikuestrategies::updateEvent()
@@ -617,7 +629,9 @@ void oblikuestrategies::configChanged()
                    ";\">");
   formatLine[1] = ("</span></p>");
 
+//  update
   updateEvent();
+  info_label->setText(copyright[edition-1]);
 }
 
 #include "oblikue-strategies.moc"
