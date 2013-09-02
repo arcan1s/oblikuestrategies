@@ -608,7 +608,7 @@ void oblikuestrategies::configAccepted()
   cg.writeEntry("font_size", uiConfig.spinBox_fontSize->value());
   cg.writeEntry("font_color", uiConfig.kcolorcombo_fontColor->color().name());
   cg.writeEntry("font_style", uiConfig.comboBox_fontStyle->currentText());
-  cg.writeEntry("font_weight", uiConfig.spinBox_fontSize->value());
+  cg.writeEntry("font_weight", uiConfig.spinBox_fontWeight->value());
 }
 
 void oblikuestrategies::configChanged()
