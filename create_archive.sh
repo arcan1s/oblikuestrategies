@@ -2,7 +2,7 @@
 
 cd sources
 
-FILES="CMakeLists.txt configwindow.ui oblikue-strategies.cpp oblikue-strategies.h oblikue-strategies.png plasma-applet-oblikue-strategies.desktop README"
+FILES="CMakeLists.txt configwindow.ui oblikue-strategies.cpp oblikue-strategies.h oblikue-strategies.png plasma-applet-oblikue-strategies.desktop ../README"
 ARCHIVE="oblikue-strategies"
 VERSION=`cat plasma-applet-oblikue-strategies.desktop| grep Version | awk -F "=" '{print $2}'`
 

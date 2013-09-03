@@ -4,7 +4,7 @@
 pkgname=kdeplasma-applets-oblikuestrategies
 _pkgname=oblikue-strategies
 pkgver=1.3
-pkgrel=2
+pkgrel=1
 pkgdesc="Plasmoid that displays a random draw from Brian Eno and Peter Schmidt's Oblique Strategies"
 arch=(any)
 url="https://github.com/arcan1s/oblikuestrategies"
@@ -13,7 +13,7 @@ depends=('kdebase-workspace')
 makedepends=('cmake' 'automoc4')
 source=(https://github.com/arcan1s/oblikuestrategies/releases/download/V.${pkgver}/${_pkgname}-${pkgver}.tar.xz)
 install=${pkgname}.install
-md5sums=('142583ca9a40c3a13e33a666560ef027')
+md5sums=('23cb68eb98312c3f667ce997a268b2df')
 
 build ()
 {

@@ -1,2 +1,0 @@
-kbuildsycoca4
-plasmoidviewer oblikue-strategies
