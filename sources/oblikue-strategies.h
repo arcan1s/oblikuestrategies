@@ -22,9 +22,9 @@
 
 #include <KIcon>
 #include <Plasma/Applet>
-#include <Plasma/Svg>
 #include <Plasma/Label>
-#include <Plasma/PushButton>
+#include <Plasma/Svg>
+
 #include <ui_configwindow.h>
 
 class QSizeF;
@@ -38,11 +38,12 @@ public:
   void init();
 
 public slots:
-  void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+  void mousePressEvent(QGraphicsSceneMouseEvent *event);
   void updateEvent();
 //  for configuration interface
   void configAccepted();
   void configChanged();
+  void setAutoUpdate();
 
 protected:
   void createConfigurationInterface(KConfigDialog *parent);
@@ -51,8 +52,10 @@ private:
   //  ui
   Plasma::Label *m_label;
   Plasma::Label *info_label;
+  QTimer *timer;
   //  variables
-  int edition, fontSize, fontWeight;
+  bool autoUpdate_bool;
+  int autoUpdate_int, edition, fontSize, fontWeight;
   QString fontFamily, fontColor, fontStyle;
   QStringList formatLine, copyright;
   QList<QStringList> mess;

@@ -20,15 +20,24 @@
 #include "oblikue-strategies.h"
 #include "ui_configwindow.h"
 
-#include <QPainter>
-#include <QFontMetrics>
-#include <QSizeF>
-#include <KLocale>
-#include <QGraphicsLinearLayout>
 #include <cstdlib>
 #include <KConfigDialog>
+#include <KLocale>
+#include <QFontMetrics>
+#include <QGraphicsLinearLayout>
+#include <QGraphicsSceneMouseEvent>
+#include <QPainter>
+#include <QSizeF>
+#include <QTimer>
+
 #include <plasma/svg.h>
 #include <plasma/theme.h>
+
+#ifdef MSEC_IN_MIN
+#undef MSEC_IN_MIN
+#endif /* MSEC_IN_MIN */
+#define MSEC_IN_MIN 60*1000
+
 
 oblikuestrategies::oblikuestrategies(QObject *parent, const QVariantList &args)
   : Plasma::Applet(parent, args)
@@ -41,6 +50,7 @@ oblikuestrategies::~oblikuestrategies()
 {
   delete m_label;
   delete info_label;
+  delete timer;
 }
 
 void oblikuestrategies::init()
@@ -529,16 +539,16 @@ void oblikuestrategies::init()
   temp_mess.clear();
 
 //  copyright
-  copyright.append(QString("<p align=\"right\"><span style=\" font-size:6pt;\">") + \
+  copyright.append(QString("<p align=\"right\"><span style=\" font-size:7pt;\">") + \
                    QString("1st edition (c) 1975 Brian Eno/Peter Schmidt") + \
                    QString("</span></p>"));
-  copyright.append(QString("<p align=\"right\"><span style=\" font-size:6pt;\">") + \
+  copyright.append(QString("<p align=\"right\"><span style=\" font-size:7pt;\">") + \
                    QString("2nd edition (c) 1978 Brian Eno/Peter Schmidt") + \
                    QString("</span></p>"));
-  copyright.append(QString("<p align=\"right\"><span style=\" font-size:6pt;\">") + \
+  copyright.append(QString("<p align=\"right\"><span style=\" font-size:7pt;\">") + \
                    QString("3rd edition (c) 1979 Brian Eno/Peter Schmidt") + \
                    QString("</span></p>"));
-  copyright.append(QString("<p align=\"right\"><span style=\" font-size:6pt;\">") + \
+  copyright.append(QString("<p align=\"right\"><span style=\" font-size:7pt;\">") + \
                    QString("4th edition (c) 1996 Brian Eno/Peter Schmidt") + \
                    QString("</span></p>"));
 
@@ -558,16 +568,21 @@ void oblikuestrategies::init()
   info_label = new Plasma::Label(this);
   layout->addItem(info_label);
 
+//  timer
+  timer = new QTimer;
+  timer->setSingleShot(false);
+
 //  read variables
   formatLine.append("");
   formatLine.append("");
   configChanged();
 }
 
-void oblikuestrategies::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void oblikuestrategies::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-// mouse double click event
-  updateEvent();
+// mouse click event
+  if (event->buttons() == Qt::LeftButton)
+    updateEvent();
 }
 
 void oblikuestrategies::updateEvent()
@@ -593,10 +608,23 @@ void oblikuestrategies::createConfigurationInterface(KConfigDialog *parent)
   else if (fontStyle == "italic")
     uiConfig.comboBox_fontStyle->setCurrentIndex(1);
   uiConfig.spinBox_fontWeight->setValue(fontWeight);
+  if (autoUpdate_bool == false)
+    uiConfig.checkBox_autoUpdate->setCheckState(Qt::Unchecked);
+  else
+    uiConfig.checkBox_autoUpdate->setCheckState(Qt::Checked);
+  setAutoUpdate();
 
-  parent->addPage(configwin, i18n("Appearance"), Applet::icon());
+  parent->addPage(configwin, i18n("Oblikue Strategies"), Applet::icon());
   connect(parent, SIGNAL(okClicked()), this, SLOT(configAccepted()));
-  connect(parent, SIGNAL(applyClicked()), this, SLOT(configAccepted()));
+  connect(uiConfig.checkBox_autoUpdate, SIGNAL(stateChanged(int)), this, SLOT(setAutoUpdate()));
+}
+
+void oblikuestrategies::setAutoUpdate()
+{
+  if (uiConfig.checkBox_autoUpdate->checkState() == 0)
+    uiConfig.spinBox_autoUpdate->setDisabled(true);
+  else if (uiConfig.checkBox_autoUpdate->checkState() == 2)
+    uiConfig.spinBox_autoUpdate->setEnabled(true);
 }
 
 void oblikuestrategies::configAccepted()
@@ -609,10 +637,20 @@ void oblikuestrategies::configAccepted()
   cg.writeEntry("font_color", uiConfig.kcolorcombo_fontColor->color().name());
   cg.writeEntry("font_style", uiConfig.comboBox_fontStyle->currentText());
   cg.writeEntry("font_weight", uiConfig.spinBox_fontWeight->value());
+  if (uiConfig.checkBox_autoUpdate->checkState() == 0)
+    cg.writeEntry("auto_update_bool", false);
+  else
+    cg.writeEntry("auto_update_bool", true);
+  cg.writeEntry("auto_update_int", uiConfig.spinBox_autoUpdate->value());
 }
 
 void oblikuestrategies::configChanged()
 {
+  if (autoUpdate_bool == true)
+  {
+    disconnect(timer, SIGNAL(timeout()), this, SLOT(updateEvent()));
+    timer->stop();
+  }
   KConfigGroup cg = config();
 
   edition = cg.readEntry("edition", 1);
@@ -621,6 +659,8 @@ void oblikuestrategies::configChanged()
   fontColor = cg.readEntry("font_color", "#000000");
   fontStyle = cg.readEntry("font_style", "normal");
   fontWeight = cg.readEntry("font_weight", 400);
+  autoUpdate_bool = cg.readEntry("auto_update_bool", true);
+  autoUpdate_int = cg.readEntry("auto_update_int", 60);
   formatLine[0] = ("<p align=\"justify\"><span style=\" font-family:'" + fontFamily + \
                    "'; font-style:" + fontStyle + \
                    "; font-size:" + QString::number(fontSize) + \
@@ -630,6 +670,11 @@ void oblikuestrategies::configChanged()
   formatLine[1] = ("</span></p>");
 
 //  update
+  if (autoUpdate_bool == true)
+  {
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateEvent()));
+    timer->start(autoUpdate_int * MSEC_IN_MIN);
+  }
   updateEvent();
   info_label->setText(copyright[edition-1]);
 }
