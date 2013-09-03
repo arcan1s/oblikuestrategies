@@ -619,14 +619,6 @@ void oblikuestrategies::createConfigurationInterface(KConfigDialog *parent)
   connect(uiConfig.checkBox_autoUpdate, SIGNAL(stateChanged(int)), this, SLOT(setAutoUpdate()));
 }
 
-void oblikuestrategies::setAutoUpdate()
-{
-  if (uiConfig.checkBox_autoUpdate->checkState() == 0)
-    uiConfig.spinBox_autoUpdate->setDisabled(true);
-  else if (uiConfig.checkBox_autoUpdate->checkState() == 2)
-    uiConfig.spinBox_autoUpdate->setEnabled(true);
-}
-
 void oblikuestrategies::configAccepted()
 {
   KConfigGroup cg = config();
@@ -677,6 +669,14 @@ void oblikuestrategies::configChanged()
   }
   updateEvent();
   info_label->setText(copyright[edition-1]);
+}
+
+void oblikuestrategies::setAutoUpdate()
+{
+  if (uiConfig.checkBox_autoUpdate->checkState() == 0)
+    uiConfig.spinBox_autoUpdate->setDisabled(true);
+  else if (uiConfig.checkBox_autoUpdate->checkState() == 2)
+    uiConfig.spinBox_autoUpdate->setEnabled(true);
 }
 
 #include "oblikue-strategies.moc"
