@@ -21,12 +21,12 @@ build ()
     rm -r ${srcdir}/build
   fi
   mkdir ${srcdir}/build && cd ${srcdir}/build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ../${_pkgname}/
-  make
+  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release ../${_pkgname}/
+  make || return 1
 }
 
 package() 
 {
   cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  make DESTDIR=${pkgdir} install || return 1
 }
