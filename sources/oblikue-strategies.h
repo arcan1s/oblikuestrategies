@@ -17,13 +17,11 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef OBLIKUESTRATEGIES_HEADER
-#define OBLIKUESTRATEGIES_HEADER
+#ifndef OBLIKUESTRATEGIES_H
+#define OBLIKUESTRATEGIES_H
 
-#include <KIcon>
 #include <Plasma/Applet>
 #include <Plasma/Label>
-#include <Plasma/Svg>
 
 #include <ui_configwindow.h>
 
@@ -36,6 +34,7 @@ public:
   oblikuestrategies(QObject *parent, const QVariantList &args);
   ~oblikuestrategies();
   void init();
+  void setMessagesText();
 
 public slots:
   void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -64,4 +63,4 @@ private:
 };
 
 K_EXPORT_PLASMA_APPLET(oblikue-strategies, oblikuestrategies)
-#endif /* OBLIKUESTRATEGIES_HEADER */
+#endif /* OBLIKUESTRATEGIES_H */

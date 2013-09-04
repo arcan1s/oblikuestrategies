@@ -20,17 +20,10 @@
 #include "oblikue-strategies.h"
 #include "ui_configwindow.h"
 
-#include <cstdlib>
 #include <KConfigDialog>
-#include <KLocale>
-#include <QFontMetrics>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
-#include <QPainter>
-#include <QSizeF>
 #include <QTimer>
-
-#include <plasma/svg.h>
 #include <plasma/theme.h>
 
 #ifdef MSEC_IN_MIN
@@ -53,10 +46,10 @@ oblikuestrategies::~oblikuestrategies()
   delete timer;
 }
 
-void oblikuestrategies::init()
+void oblikuestrategies::setMessagesText()
 {
   QStringList temp_mess;
-//  first edition
+  //  first edition
   temp_mess.append("Abandon normal instruments");
   temp_mess.append("Accept advice");
   temp_mess.append("Accretion");
@@ -136,7 +129,7 @@ void oblikuestrategies::init()
   temp_mess.append("(Organic) machinery");
   temp_mess.append("Overtly resist change");
   temp_mess.append("Put in earplugs");
-  temp_mess.append("Remember those quiet evenings");
+  temp_mess.append("Remember .those quiet evenings");
   temp_mess.append("Remove ambiguities and convert to specifics");
   temp_mess.append("Remove specifics and convert to ambiguities");
   temp_mess.append("Repetition is a form of change");
@@ -174,7 +167,7 @@ void oblikuestrategies::init()
   mess.append(temp_mess);
   temp_mess.clear();
 
-//  second edition
+  //  second edition
   temp_mess.append("Abandon normal instruments");
   temp_mess.append("Accept advice");
   temp_mess.append("Accretion");
@@ -263,7 +256,7 @@ void oblikuestrategies::init()
   temp_mess.append("Overtly resist change");
   temp_mess.append("Put in earplugs");
   temp_mess.append("Question the heroic approach");
-  temp_mess.append("Remember those quiet evenings");
+  temp_mess.append("Remember .those quiet evenings");
   temp_mess.append("Remove ambiguities and convert to specifics");
   temp_mess.append("Remove specifics and convert to ambiguities");
   temp_mess.append("Repetition is a form of change");
@@ -307,7 +300,7 @@ void oblikuestrategies::init()
   mess.append(temp_mess);
   temp_mess.clear();
 
-//  third edition
+  //  third edition
   temp_mess.append("Abandon normal instruments");
   temp_mess.append("Accept advice");
   temp_mess.append("Accretion");
@@ -392,7 +385,7 @@ void oblikuestrategies::init()
   temp_mess.append("(Organic) machinery");
   temp_mess.append("Overtly resist change");
   temp_mess.append("Question the heroic approach");
-  temp_mess.append("Remember those quiet evenings");
+  temp_mess.append("Remember .those quiet evenings");
   temp_mess.append("Remove ambiguities and convert to specifics");
   temp_mess.append("Remove specifics and convert to ambiguities");
   temp_mess.append("Repetition is a form of change");
@@ -434,7 +427,7 @@ void oblikuestrategies::init()
   mess.append(temp_mess);
   temp_mess.clear();
 
-//  fouth edition
+  //  fouth edition
   temp_mess.append("Abandon desire");
   temp_mess.append("Abandon normal instructions");
   temp_mess.append("Accept advice");
@@ -538,41 +531,39 @@ void oblikuestrategies::init()
   mess.append(temp_mess);
   temp_mess.clear();
 
-//  copyright
-  copyright.append(QString("<p align=\"right\"><span style=\" font-size:7pt;\">") + \
-                   QString("1st edition (c) 1975 Brian Eno/Peter Schmidt") + \
-                   QString("</span></p>"));
-  copyright.append(QString("<p align=\"right\"><span style=\" font-size:7pt;\">") + \
-                   QString("2nd edition (c) 1978 Brian Eno/Peter Schmidt") + \
-                   QString("</span></p>"));
-  copyright.append(QString("<p align=\"right\"><span style=\" font-size:7pt;\">") + \
-                   QString("3rd edition (c) 1979 Brian Eno/Peter Schmidt") + \
-                   QString("</span></p>"));
-  copyright.append(QString("<p align=\"right\"><span style=\" font-size:7pt;\">") + \
-                   QString("4th edition (c) 1996 Brian Eno/Peter Schmidt") + \
-                   QString("</span></p>"));
+  //  copyright
+  copyright.append(qApp->translate("copyright", "<p align=\"right\"><span style=\" font-size:7pt;\">1st edition (c) 1975 Brian Eno/Peter Schmidt</span></p>"));
+  copyright.append(qApp->translate("copyright", "<p align=\"right\"><span style=\" font-size:7pt;\">2nd edition (c) 1978 Brian Eno/Peter Schmidt</span></p>"));
+  copyright.append(qApp->translate("copyright", "<p align=\"right\"><span style=\" font-size:7pt;\">3rd edition (c) 1979 Brian Eno/Peter Schmidt</span></p>"));
+  copyright.append(qApp->translate("copyright", "<p align=\"right\"><span style=\" font-size:7pt;\">4th edition (c) 1996 Brian Eno/Peter Schmidt</span></p>"));
+}
 
-//  generate ui
-//  layout
+void oblikuestrategies::init()
+{
+  setMessagesText();
+
+  //  generate ui
+  //  layout
   QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(this);
   layout->setOrientation(Qt::Vertical);
 
-//  label
+  //  label
   layout->addStretch(1);
   m_label = new Plasma::Label(this);
   m_label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_label->setToolTip(qApp->translate("tooltip", "Click here to update message"));
   layout->addItem(m_label);
   layout->addStretch(1);
 
-//  copyright label
+  //  copyright label
   info_label = new Plasma::Label(this);
   layout->addItem(info_label);
 
-//  timer
+  //  timer
   timer = new QTimer;
   timer->setSingleShot(false);
 
-//  read variables
+  //  read variables
   formatLine.append("");
   formatLine.append("");
   configChanged();
@@ -580,14 +571,14 @@ void oblikuestrategies::init()
 
 void oblikuestrategies::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-// mouse click event
+  // mouse click event
   if (event->buttons() == Qt::LeftButton)
     updateEvent();
 }
 
 void oblikuestrategies::updateEvent()
 {
-//  update text
+  //  update text
   int num = rand() % mess[edition-1].count();
   m_label->setText(formatLine[0] + mess[edition-1][num] + formatLine[1]);
 }
@@ -661,7 +652,7 @@ void oblikuestrategies::configChanged()
                    ";\">");
   formatLine[1] = ("</span></p>");
 
-//  update
+  //  update
   if (autoUpdate_bool == true)
   {
     connect(timer, SIGNAL(timeout()), this, SLOT(updateEvent()));

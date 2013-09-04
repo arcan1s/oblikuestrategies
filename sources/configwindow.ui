@@ -56,6 +56,9 @@
          <height>23</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>The Oblique Strategies edition</string>
+       </property>
        <item>
         <property name="text">
          <string>First</string>
@@ -122,6 +125,9 @@
          <height>23</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Set font family</string>
+       </property>
       </widget>
      </item>
     </layout>
@@ -167,6 +173,9 @@
          <width>100</width>
          <height>23</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Set font size</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -226,6 +235,9 @@
          <height>23</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Set font color</string>
+       </property>
       </widget>
      </item>
     </layout>
@@ -271,6 +283,9 @@
          <width>100</width>
          <height>23</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Set font style</string>
        </property>
        <item>
         <property name="text">
@@ -328,6 +343,9 @@
          <height>23</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Set font weight</string>
+       </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
@@ -357,6 +375,9 @@
          <height>23</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Enabel autoupdate</string>
+       </property>
        <property name="text">
         <string>Auto update, min</string>
        </property>
@@ -385,6 +406,9 @@
          <width>100</width>
          <height>23</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Set autoupdate interval, minutes</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

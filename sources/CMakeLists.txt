@@ -1,7 +1,7 @@
 # set project name
 project (plasma_applet_oblikue-strategies)
 
-# find required Libaries
+# find required libaries
 find_package (KDE4 REQUIRED)
 include (KDE4Defaults)
 
