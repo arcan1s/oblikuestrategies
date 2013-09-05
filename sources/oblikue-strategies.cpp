@@ -20,7 +20,10 @@
 #include "oblikue-strategies.h"
 #include "ui_configwindow.h"
 
+#include <cstdlib>
+#include <ctime>
 #include <KConfigDialog>
+#include <KNotification>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QTimer>
@@ -32,8 +35,8 @@
 #define MSEC_IN_MIN 60*1000
 
 
-oblikuestrategies::oblikuestrategies(QObject *parent, const QVariantList &args)
-  : Plasma::Applet(parent, args)
+oblikuestrategies::oblikuestrategies(QObject *parent, const QVariantList &args) :
+  Plasma::Applet(parent, args)
 {
   setBackgroundHints(DefaultBackground);
   setHasConfigurationInterface(true);
@@ -41,15 +44,15 @@ oblikuestrategies::oblikuestrategies(QObject *parent, const QVariantList &args)
 
 oblikuestrategies::~oblikuestrategies()
 {
-  delete m_label;
   delete info_label;
+  delete main_label;
   delete timer;
 }
 
-void oblikuestrategies::setMessagesText()
+int oblikuestrategies::setMessagesText()
 {
   QStringList temp_mess;
-  //  first edition
+  // first edition
   temp_mess.append("Abandon normal instruments");
   temp_mess.append("Accept advice");
   temp_mess.append("Accretion");
@@ -167,7 +170,7 @@ void oblikuestrategies::setMessagesText()
   mess.append(temp_mess);
   temp_mess.clear();
 
-  //  second edition
+  // second edition
   temp_mess.append("Abandon normal instruments");
   temp_mess.append("Accept advice");
   temp_mess.append("Accretion");
@@ -300,7 +303,7 @@ void oblikuestrategies::setMessagesText()
   mess.append(temp_mess);
   temp_mess.clear();
 
-  //  third edition
+  // third edition
   temp_mess.append("Abandon normal instruments");
   temp_mess.append("Accept advice");
   temp_mess.append("Accretion");
@@ -427,7 +430,7 @@ void oblikuestrategies::setMessagesText()
   mess.append(temp_mess);
   temp_mess.clear();
 
-  //  fouth edition
+  // fouth edition
   temp_mess.append("Abandon desire");
   temp_mess.append("Abandon normal instructions");
   temp_mess.append("Accept advice");
@@ -531,42 +534,59 @@ void oblikuestrategies::setMessagesText()
   mess.append(temp_mess);
   temp_mess.clear();
 
-  //  copyright
+  // copyright
   copyright.append(qApp->translate("copyright", "<p align=\"right\"><span style=\" font-size:7pt;\">1st edition (c) 1975 Brian Eno/Peter Schmidt</span></p>"));
   copyright.append(qApp->translate("copyright", "<p align=\"right\"><span style=\" font-size:7pt;\">2nd edition (c) 1978 Brian Eno/Peter Schmidt</span></p>"));
   copyright.append(qApp->translate("copyright", "<p align=\"right\"><span style=\" font-size:7pt;\">3rd edition (c) 1979 Brian Eno/Peter Schmidt</span></p>"));
   copyright.append(qApp->translate("copyright", "<p align=\"right\"><span style=\" font-size:7pt;\">4th edition (c) 1996 Brian Eno/Peter Schmidt</span></p>"));
+
+  // text format init
+  formatLine.append("");
+  formatLine.append("");
+
+  return 0;
 }
 
 void oblikuestrategies::init()
 {
-  setMessagesText();
+  if (setMessagesText() != 0)
+    return;
 
-  //  generate ui
-  //  layout
+  // generate ui
+  // layout
   QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(this);
   layout->setOrientation(Qt::Vertical);
-
-  //  label
+  // label
   layout->addStretch(1);
-  m_label = new Plasma::Label(this);
-  m_label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  m_label->setToolTip(qApp->translate("tooltip", "Click here to update message"));
-  layout->addItem(m_label);
+  main_label = new Plasma::Label(this);
+  main_label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  main_label->setToolTip(qApp->translate("tooltip", "Click here to update message"));
+  layout->addItem(main_label);
   layout->addStretch(1);
-
-  //  copyright label
+  // copyright label
   info_label = new Plasma::Label(this);
   layout->addItem(info_label);
-
-  //  timer
-  timer = new QTimer;
+  // timer
+  timer = new QTimer(this);
   timer->setSingleShot(false);
-
-  //  read variables
-  formatLine.append("");
-  formatLine.append("");
+  // read variables
   configChanged();
+}
+
+int oblikuestrategies::autoUpdateEvent()
+{
+  // auto update text
+  int num = updateEvent();
+  if (notify_bool == true)
+  {
+    if (sendNotification(QString("newMessage"), num) == 0)
+    {
+      // pass
+    }
+    else
+      return 1;
+  }
+  return 0;
 }
 
 void oblikuestrategies::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -576,11 +596,25 @@ void oblikuestrategies::mousePressEvent(QGraphicsSceneMouseEvent *event)
     updateEvent();
 }
 
-void oblikuestrategies::updateEvent()
+int oblikuestrategies::sendNotification(QString eventId, int num)
 {
-  //  update text
+  // send notification
+  KNotification *notification = new KNotification(eventId);
+  notification->setComponentData(KComponentData("plasma_applet_oblikue-strategies"));
+  notification->setTitle(QString(i18n("Oblikue Strategies")));
+  notification->setText(mess[edition-1][num]);
+  notification->sendEvent();
+  delete notification;
+  return 0;
+}
+
+int oblikuestrategies::updateEvent()
+{
+  // update text
+  srand(time(0));
   int num = rand() % mess[edition-1].count();
-  m_label->setText(formatLine[0] + mess[edition-1][num] + formatLine[1]);
+  main_label->setText(formatLine[0] + mess[edition-1][num] + formatLine[1]);
+  return num;
 }
 
 //  configuration interface
@@ -604,6 +638,11 @@ void oblikuestrategies::createConfigurationInterface(KConfigDialog *parent)
   else
     uiConfig.checkBox_autoUpdate->setCheckState(Qt::Checked);
   setAutoUpdate();
+  uiConfig.spinBox_autoUpdate->setValue(autoUpdate_int);
+  if (notify_bool == false)
+    uiConfig.checkBox_sendNotify->setCheckState(Qt::Unchecked);
+  else
+    uiConfig.checkBox_sendNotify->setCheckState(Qt::Checked);
 
   parent->addPage(configwin, i18n("Oblikue Strategies"), Applet::icon());
   connect(parent, SIGNAL(okClicked()), this, SLOT(configAccepted()));
@@ -625,13 +664,17 @@ void oblikuestrategies::configAccepted()
   else
     cg.writeEntry("auto_update_bool", true);
   cg.writeEntry("auto_update_int", uiConfig.spinBox_autoUpdate->value());
+  if (uiConfig.checkBox_sendNotify->checkState() == 0)
+    cg.writeEntry("notify_bool", false);
+  else
+    cg.writeEntry("notify_bool", true);
 }
 
 void oblikuestrategies::configChanged()
 {
   if (autoUpdate_bool == true)
   {
-    disconnect(timer, SIGNAL(timeout()), this, SLOT(updateEvent()));
+    disconnect(timer, SIGNAL(timeout()), this, SLOT(autoUpdateEvent()));
     timer->stop();
   }
   KConfigGroup cg = config();
@@ -644,6 +687,7 @@ void oblikuestrategies::configChanged()
   fontWeight = cg.readEntry("font_weight", 400);
   autoUpdate_bool = cg.readEntry("auto_update_bool", true);
   autoUpdate_int = cg.readEntry("auto_update_int", 60);
+  notify_bool = cg.readEntry("notify_bool", false);
   formatLine[0] = ("<p align=\"justify\"><span style=\" font-family:'" + fontFamily + \
                    "'; font-style:" + fontStyle + \
                    "; font-size:" + QString::number(fontSize) + \
@@ -652,22 +696,33 @@ void oblikuestrategies::configChanged()
                    ";\">");
   formatLine[1] = ("</span></p>");
 
-  //  update
+  // update
   if (autoUpdate_bool == true)
   {
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateEvent()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(autoUpdateEvent()));
     timer->start(autoUpdate_int * MSEC_IN_MIN);
   }
   updateEvent();
   info_label->setText(copyright[edition-1]);
 }
 
-void oblikuestrategies::setAutoUpdate()
+int oblikuestrategies::setAutoUpdate()
 {
   if (uiConfig.checkBox_autoUpdate->checkState() == 0)
+  {
     uiConfig.spinBox_autoUpdate->setDisabled(true);
+    uiConfig.checkBox_sendNotify->setDisabled(true);
+    uiConfig.checkBox_sendNotify->setCheckState(Qt::Unchecked);
+  }
   else if (uiConfig.checkBox_autoUpdate->checkState() == 2)
+  {
     uiConfig.spinBox_autoUpdate->setEnabled(true);
+    uiConfig.checkBox_sendNotify->setEnabled(true);
+    uiConfig.checkBox_sendNotify->setCheckState(Qt::Checked);
+  }
+  else
+    return 1;
+  return 0;
 }
 
 #include "oblikue-strategies.moc"

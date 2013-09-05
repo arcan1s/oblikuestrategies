@@ -1,0 +1,10 @@
+[Global]
+IconName=oblikue-strategies
+Name=Oblikue Strategies
+Comment=Oblikue Strategies
+
+
+[Event/newMessage]
+Name=New message
+Comment=There is auto updated message in widget
+Action=Popup

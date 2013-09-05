@@ -25,7 +25,7 @@
 
 #include <ui_configwindow.h>
 
-class QSizeF;
+class QGraphicsLinearLayout;
 
 class oblikuestrategies : public Plasma::Applet
 {
@@ -33,32 +33,34 @@ class oblikuestrategies : public Plasma::Applet
 public:
   oblikuestrategies(QObject *parent, const QVariantList &args);
   ~oblikuestrategies();
+  int setMessagesText();
   void init();
-  void setMessagesText();
 
 public slots:
+  int autoUpdateEvent();
+  int sendNotification(QString eventId, int num);
+  int updateEvent();
   void mousePressEvent(QGraphicsSceneMouseEvent *event);
-  void updateEvent();
-//  for configuration interface
+  // for configuration interface
+  int setAutoUpdate();
   void configAccepted();
   void configChanged();
-  void setAutoUpdate();
 
 protected:
   void createConfigurationInterface(KConfigDialog *parent);
 
 private:
-  //  ui
-  Plasma::Label *m_label;
+  // ui
+  Plasma::Label *main_label;
   Plasma::Label *info_label;
   QTimer *timer;
-  //  variables
-  bool autoUpdate_bool;
+  // variables
+  bool autoUpdate_bool, notify_bool;
   int autoUpdate_int, edition, fontSize, fontWeight;
   QString fontFamily, fontColor, fontStyle;
   QStringList formatLine, copyright;
   QList<QStringList> mess;
-  //  configuration interface
+  // configuration interface
   Ui::ConfigWindow uiConfig;
 };
 
