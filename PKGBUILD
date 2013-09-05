@@ -13,7 +13,7 @@ depends=('kdebase-workspace')
 makedepends=('cmake' 'automoc4')
 source=(https://github.com/arcan1s/oblikuestrategies/releases/download/V.${pkgver}/${_pkgname}-${pkgver}.tar.xz)
 install=${pkgname}.install
-md5sums=('a5dc356183cb71ef4a42dd9f02da08e8')
+md5sums=('93c677633f77a371fb3b7461521e58d5')
 
 build ()
 {

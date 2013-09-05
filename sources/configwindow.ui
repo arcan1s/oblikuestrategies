@@ -431,6 +431,9 @@
    </item>
    <item>
     <widget class="QCheckBox" name="checkBox_sendNotify">
+     <property name="toolTip">
+      <string>Send notofications when updated</string>
+     </property>
      <property name="text">
       <string>Send notifications</string>
      </property>
