@@ -578,14 +578,8 @@ int oblikuestrategies::autoUpdateEvent()
   // auto update text
   int num = updateEvent();
   if (notify_bool == true)
-  {
-    if (sendNotification(QString("newMessage"), num) == 0)
-    {
-      // pass
-    }
-    else
+    if (sendNotification(QString("newMessage"), num) != 0)
       return 1;
-  }
   return 0;
 }
 
