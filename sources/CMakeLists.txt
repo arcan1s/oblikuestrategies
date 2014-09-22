@@ -5,10 +5,10 @@ project (plasma_applet_oblikue-strategies)
 find_package (KDE4 REQUIRED)
 include (KDE4Defaults)
 
-add_definitions (${QT_DEFINITIONS} 
+add_definitions (${QT_DEFINITIONS}
                  ${KDE4_DEFINITIONS})
-include_directories (${CMAKE_SOURCE_DIR} 
-                     ${CMAKE_BINARY_DIR} 
+include_directories (${CMAKE_SOURCE_DIR}
+                     ${CMAKE_BINARY_DIR}
                      ${KDE4_INCLUDES})
 
 # set sources
