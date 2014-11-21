@@ -1,5 +1,4 @@
-# Author: Evgeniy "arcanis" Alexeev <esalexeev@gmail.com>
-# Maintainer: Evgeniy "arcanis" Alexeev <esalexeev@gmail.com>
+# Maintainer: Evgeniy "arcanis" Alexeev <arcanis at archlinux dot org>
 
 pkgname=kdeplasma-applets-oblikuestrategies
 _pkgname=oblikue-strategies
@@ -15,14 +14,15 @@ source=(https://github.com/arcan1s/oblikuestrategies/releases/download/V.${pkgve
 install=${pkgname}.install
 md5sums=('e813b03a17d96cddc41acdf457e37bbb')
 
-build () {
-  if [[ -d ${srcdir}/build ]]; then
-    rm -rf "${srcdir}/build"
-  fi
+prepare() {
+  rm -rf "${srcdir}/build"
   mkdir "${srcdir}/build"
+}
+
+build() {
   cd "${srcdir}/build"
   cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
+        -DCMAKE_INSTALL_PREFIX="`kde4-config --prefix`" \
         ../${_pkgname}
   make
 }
