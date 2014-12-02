@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2013 by Evgeniy Alekseev <esalekseev@gmail.com>         *
+ *   Copyright (C) 2013 by Evgeniy Alekseev <esalexeev@gmail.com>          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
