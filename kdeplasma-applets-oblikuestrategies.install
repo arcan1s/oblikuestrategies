@@ -1,17 +1,14 @@
-post_install()
-{
+post_install() {
   cat << EOF
 Update plasmoids...
 EOF
   kbuildsycoca4 > /dev/null 2>&1
 }
 
-post_upgrade()
-{
+post_upgrade() {
   post_install
 }
 
-post_remove()
-{
+post_remove() {
   post_install
 }

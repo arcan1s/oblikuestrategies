@@ -100,7 +100,7 @@ Icon=oblikue-strategies
 
 X-KDE-ServiceTypes=Plasma/Applet
 X-KDE-Library=plasma_applet_oblikue-strategies
-X-KDE-PluginInfo-Author=Evgeniy Alekseev aka arcanis
+X-KDE-PluginInfo-Author=Evgeniy Alekseev
 X-KDE-PluginInfo-Email=esalexeev@gmail.com
 X-KDE-PluginInfo-Name=oblikue-strategies
 X-KDE-PluginInfo-Version=1.5
